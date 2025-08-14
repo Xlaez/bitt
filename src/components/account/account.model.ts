@@ -3,12 +3,9 @@ import { Schema, Document, model } from "mongoose";
 export interface IAccount extends Document {
   _id: string;
   email: string;
-  username: string;
-  name: string;
+  firstname: string;
+  lastname: string;
   password: string;
-  age: number;
-  otp: string;
-  otpExpiry: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,30 +17,18 @@ const AccountSchema = new Schema(
       required: true,
       unique: true,
     },
-    username: {
+    firstname: {
       type: String,
-      unique: true,
     },
-    name: {
+    lastname: {
       type: String,
     },
     password: {
       type: String,
       required: false,
     },
-    age: {
-      type: Number,
-    },
-    otp: {
-      type: String,
-    },
-    otpExpiry: {
-      type: Date,
-    },
   },
   { timestamps: true, versionKey: false }
 );
-
-AccountSchema.index({ email: 1, username: 1 }, { background: true });
 
 export const AccountModel = model<IAccount>("accounts", AccountSchema);
