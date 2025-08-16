@@ -47,12 +47,13 @@ export class AccountService extends DolphServiceHandler<Dolph> {
       account._id.toString()
     );
 
-    return this.TokensService.sendCookie(accessToken, res, {
+    return {
       id: account._id,
       email: account.email,
       firstname: account.firstname,
       lastname: account.lastname,
-    });
+      accessToken,
+    };
   }
 
   async login(dto: LoginDto, res: Response) {
@@ -73,16 +74,16 @@ export class AccountService extends DolphServiceHandler<Dolph> {
       account._id.toString()
     );
 
-    return this.TokensService.sendCookie(accessToken, res, {
+    return {
       id: account._id,
       email: account.email,
       firstname: account.firstname,
       lastname: account.lastname,
-    });
+      accessToken,
+    };
   }
 
-  async logout(res: Response) {
-    res.clearCookie("accessToken");
+  async logout() {
     return { message: "Logged out successfully" };
   }
 

@@ -14,6 +14,7 @@ import {
   DRes,
   DPayload,
   UseMiddleware,
+  DReq,
 } from "@dolphjs/dolph/decorators";
 import { AccountService } from "./account.service";
 import { RegisterDto, LoginDto } from "./account.dto";
@@ -33,19 +34,21 @@ export class AccountController extends DolphControllerHandler<Dolph> {
     @DBody(RegisterDto) body: RegisterDto,
     @DRes() res: DResponse
   ) {
-    await this.AccountService.register(body, res);
-    SuccessResponse({ res, body: { message: "Success" } });
+    const result = await this.AccountService.register(body, res);
+    SuccessResponse({ res, body: { message: "Success", data: result } });
   }
 
   @Post("login")
   async login(@DBody(LoginDto) body: LoginDto, @DRes() res: DResponse) {
-    await this.AccountService.login(body, res);
-    SuccessResponse({ res, body: { message: "Success" } });
+    const result = await this.AccountService.login(body, res);
+    SuccessResponse({ res, body: { message: "Success", data: result } });
   }
 
   @Post("logout")
-  async logout(@DRes() res: DResponse) {
-    const result = await this.AccountService.logout(res);
+  @UseMiddleware(authShield)
+  async logout(@DRes() res: DResponse, @DReq() req: DRequest) {
+    req.payload = {} as any;
+    const result = await this.AccountService.logout();
     SuccessResponse({ res, body: result });
   }
 

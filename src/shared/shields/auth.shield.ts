@@ -16,16 +16,16 @@ export const authShield = async (
   next: DNextFunc
 ) => {
   try {
-    const authToken = req.cookies?.accessToken;
+    const authToken = req.headers?.authorization;
 
     if (!authToken) {
       return next(
-        new UnauthorizedException("No authentication cookie provided")
+        new UnauthorizedException("No authentication token provided")
       );
     }
 
     const payload = verifyJWTwithHMAC({
-      token: authToken,
+      token: authToken.split(" ")[1],
       secret: "default_jwt_secret",
     });
 
